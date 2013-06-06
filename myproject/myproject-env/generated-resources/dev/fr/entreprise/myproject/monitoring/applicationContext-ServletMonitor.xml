@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                           http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+	<!-- Utilisation d'un fichier de conf -->
+	<bean id="monitoring-placeholder"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/fr/generali/myproject/myproject-services.properties</value>
+				<value>classpath:/fr/generali/myproject/myproject-dao.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Utilisation d'un fichier de conf -->
+	<bean id="monitoring-optional-placeholder"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/fr/generali/myproject/versions.properties</value>
+			</list>
+		</property>
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="placeholderPrefix" value="$opt{"></property>
+	</bean>
+
+
+	<bean class="fr.generali.monitoring.api.impl.MonitoringServiceImpl">
+		<!-- Proprietes communes : -->
+		<property name="webAppName" value="myproject-monitoring $opt{myproject.version}" />
+		<!-- Liste des tests techniques -->
+		<property name="technicalTests">
+			<list>
+				<ref bean="jvmMonitor" />
+				<ref bean="dataSourcemyprojectMonitor" />
+				<ref bean="ldapAuthMonitor" />
+                <ref bean="fileSystemMonitor"/>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Tests techniques -->
+	<bean id="jvmMonitor" class="fr.generali.monitoring.monitors.JVMMonitor">
+		<property name="name" value="Assert JVM version is 1.6" />
+		<property name="supportedJvmVersion" value="1.6" />
+		<property name="description"
+			value="Verifie que la version de JVM sur laquelle on s'execute est bien 1.6" />
+	</bean>
+
+	<bean id="dataSourcemyprojectMonitor" class="fr.generali.monitoring.monitors.JNDIMonitor">
+		<property name="name"
+			value="Assert JNDI name ${myproject.dao.jndi.name} present" />
+		<property name="jndiName" value="${myproject.dao.jndi.name}" />
+		<property name="description"
+			value="Verifie que la datasource qui contient les donnees d'authentification est presente (${myproject.dao.jndi.name})" />
+	</bean>
+
+	<!-- LDAP Monitor BEGIN  -->
+
+	<bean id="ldapAuthMonitor" class="fr.generali.monitoring.custom.LdapMonitor">
+		<property name="name" value="Monitoring de l'URL du LDAP" />
+		<property name="description"
+			value="Verifie que le server LDAP est active : ${myproject.ldap.url} " />
+		<property name="dirContextBeanId"
+			value="javax.naming.ldap.InitialLdapContext-auth-security" />
+	</bean>
+
+    <bean id="fileSystemMonitor" class="fr.generali.monitoring.custom.FileSystemMonitor">
+        <property name="name" value="Monitoring du puit" />
+        <property name="description"
+              value="Verifie que le filesystem est operationnel : ${myproject.datastage.puits} " />
+        <property name="path" value="${myproject.datastage.puits}" />
+    </bean>
+
+	<bean id="javax.naming.ldap.InitialLdapContext-auth-security"
+		class="javax.naming.ldap.InitialLdapContext" scope="prototype"
+		destroy-method="close" lazy-init="true">
+		<constructor-arg>
+			<value type="java.util.Properties">
+				java.naming.factory.initial=com.sun.jndi.ldap.LdapCtxFactory
+				java.naming.provider.url=${myproject.ldap.url}
+				java.naming.security.authentication=simple
+				java.naming.security.principal=${myproject.ldap.user.dn}
+				java.naming.security.credentials=${myproject.ldap.password}
+				com.sun.jndi.ldap.connect.timeout=50000
+			</value>
+		</constructor-arg>
+		<constructor-arg>
+			<null />
+		</constructor-arg>
+	</bean>
+	<!-- LDAP Monitor END  -->
+
+</beans>

@@ -1,0 +1,11 @@
+K 10
+svn:ignore
+V 69
+target
+generated-resources
+.settings
+.checkstyle
+.classpath
+.project
+
+END

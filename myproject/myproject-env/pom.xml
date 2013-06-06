@@ -1,0 +1,203 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.entrprise.poc</groupId>
+		<artifactId>myproject</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>myproject-env</artifactId>
+	<packaging>jar</packaging>
+
+	<name>[${packaging}] [${version}] [${artifactId}]</name>
+
+	<properties>
+		<front.target>target/generated-resources/conf</front.target>
+		<template.include.pattern>templates/**/*</template.include.pattern>
+	</properties>
+
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<!-- ========================================= -->
+								<!-- configuration -->
+								<!-- ========================================= -->
+								<artifactItem>
+									<groupId>org.entrprise.poc</groupId>
+									<artifactId>myproject-conf</artifactId>
+									<version>${version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${front.target}</outputDirectory>
+									<includes>${template.include.pattern}</includes>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>package-conf</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<descriptors>
+						<descriptor>myproject-conf-assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>validate-jnd-config</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<jnd-conf-prefix-front>${project.basedir}/target/myproject-env-${version}-front/app/jnd/cells/Cell_RLE-Integration_std/projets/myproject</jnd-conf-prefix-front>
+				<socle-local-projet.properties-front>${jnd-conf-prefix-front}/socle-local-projet.properties</socle-local-projet.properties-front>
+				<socle-local-instance.properties-front>${jnd-conf-prefix-front}/dns.instance_name.socle-local-instance.properties</socle-local-instance.properties-front>
+			</properties>
+			<build>
+				<plugins>
+
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<configuration>
+									<tasks>
+										<echo>=======================================================================================</echo>
+										<echo>==== VALIDATION DE LA CONFIG JND ==</echo>
+										<echo>=======================================================================================</echo>
+										<!-- Using an ant task to deflate webinstaller.zip -->
+										<unzip src="target/myproject-env-${version}-front.zip"
+											dest="${project.basedir}/target/myproject-env-${version}-front" />
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+
+					<plugin>
+						<groupId>org.codehaus.groovy.maven</groupId>
+						<artifactId>gmaven-plugin</artifactId>
+						<configuration>
+							<properties />
+						</configuration>
+						<executions>
+
+							<!-- =================================================== -->
+							<!--== CONFIG JND FRONT -->
+							<!-- =================================================== -->
+							<execution>
+								<id>VALIDATE-CONF-JND-FRONT-INT</id>
+								<phase>package</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<properties>
+										<zone-env-parameters.properties>${jnd-conf-prefix-front}/conf/env/RLE-Integration-parameters.properties</zone-env-parameters.properties>
+										<socle-local-projet.properties>${socle-local-projet.properties-front}</socle-local-projet.properties>
+										<socle-local-instance.properties>${socle-local-instance.properties-front}</socle-local-instance.properties>
+										<templates.dir>${jnd-conf-prefix-front}/conf/templates</templates.dir>
+									</properties>
+									<source>${project.basedir}/tools/genererDevConf_V3.groovy</source>
+								</configuration>
+							</execution>
+
+							<execution>
+								<id>VALIDATE-CONF-JND-FRONT-REC</id>
+								<phase>package</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<properties>
+										<zone-env-parameters.properties>${jnd-conf-prefix-front}/conf/env/RLE-Recette-parameters.properties</zone-env-parameters.properties>
+										<socle-local-projet.properties>${socle-local-projet.properties-front}</socle-local-projet.properties>
+										<socle-local-instance.properties>${socle-local-instance.properties-front}</socle-local-instance.properties>
+										<templates.dir>${jnd-conf-prefix-front}/conf/templates</templates.dir>
+									</properties>
+									<source>${project.basedir}/tools/genererDevConf_V3.groovy</source>
+								</configuration>
+							</execution>
+
+							<execution>
+								<id>VALIDATE-CONF-JND-FRONT-QUAL</id>
+								<phase>package</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<properties>
+										<zone-env-parameters.properties>${jnd-conf-prefix-front}/conf/env/RLE-Pre-production-parameters.properties</zone-env-parameters.properties>
+										<socle-local-projet.properties>${socle-local-projet.properties-front}</socle-local-projet.properties>
+										<socle-local-instance.properties>${socle-local-instance.properties-front}</socle-local-instance.properties>
+										<templates.dir>${jnd-conf-prefix-front}/conf/templates</templates.dir>
+									</properties>
+									<source>${project.basedir}/tools/genererDevConf_V3.groovy</source>
+								</configuration>
+							</execution>
+							<execution>
+								<id>VALIDATE-CONF-JND-FRONT-PROD</id>
+								<phase>package</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<properties>
+										<zone-env-parameters.properties>${jnd-conf-prefix-front}/conf/env/RLE-Production-parameters.properties</zone-env-parameters.properties>
+										<socle-local-projet.properties>${socle-local-projet.properties-front}</socle-local-projet.properties>
+										<socle-local-instance.properties>${socle-local-instance.properties-front}</socle-local-instance.properties>
+										<templates.dir>${jnd-conf-prefix-front}/conf/templates</templates.dir>
+									</properties>
+									<source>${project.basedir}/tools/genererDevConf_V3.groovy</source>
+								</configuration>
+							</execution>
+
+
+
+						</executions>
+					</plugin>
+
+
+
+				</plugins>
+			</build>
+
+		</profile>
+	</profiles>
+
+
+</project>

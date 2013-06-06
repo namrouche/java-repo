@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/!svn/ver/281400/projets/ifactif/myproject/trunk/myproject-conf/src/main/resources/env
+END
+socle-local-projet.properties
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/!svn/ver/281400/projets/ifactif/myproject/trunk/myproject-conf/src/main/resources/env/socle-local-projet.properties
+END
+socle-local-instance.properties
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/!svn/ver/246539/projets/ifactif/myproject/trunk/myproject-conf/src/main/resources/env/socle-local-instance.properties
+END
+RLE-Development-parameters.properties
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/!svn/ver/275139/projets/ifactif/myproject/trunk/myproject-conf/src/main/resources/env/RLE-Development-parameters.properties
+END

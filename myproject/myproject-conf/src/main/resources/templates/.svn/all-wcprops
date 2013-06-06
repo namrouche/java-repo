@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/!svn/ver/281811/projets/ifactif/myproject/trunk/myproject-conf/src/main/resources/templates
+END
+logback.xml
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/!svn/ver/246539/projets/ifactif/myproject/trunk/myproject-conf/src/main/resources/templates/logback.xml
+END
+logback-myproject.xml
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/!svn/ver/246539/projets/ifactif/myproject/trunk/myproject-conf/src/main/resources/templates/logback-myproject.xml
+END

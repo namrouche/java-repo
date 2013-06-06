@@ -1,0 +1,67 @@
+<assembly>
+	<id>front</id>
+	<formats>
+		<format>zip</format>
+	</formats> 
+	<baseDirectory />
+	<fileSets>
+		<!-- INTEGRATION -->
+		<fileSet>
+			<directory>myproject-env/int</directory>
+			<outputDirectory>/app/jnd/cells/Cell_RLE-Integration_std/projets/myproject/conf/env</outputDirectory>
+			<includes>
+				<include>RLE-Integration-parameters.properties</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>myproject-env/int</directory>
+			<outputDirectory>/app/jnd/cells/Cell_RLE-Integration_std/projets/myproject</outputDirectory>
+			<includes>
+				<include>socle-local-projet.properties</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>myproject-env/int</directory>
+			<outputDirectory>/app/jnd/cells/Cell_RLE-Integration_std/projets/myproject</outputDirectory>
+			<includes>
+				<include>dns.instance_name.socle-local-instance.properties</include>
+			</includes>
+		</fileSet>
+
+		<!-- RECETTE-->
+		<fileSet>
+			<directory>myproject-env/rec</directory>
+			<outputDirectory>/app/jnd/cells/Cell_RLE-Integration_std/projets/myproject/conf/env</outputDirectory>
+			<includes>
+				<include>RLE-Recette-parameters.properties</include>
+			</includes>
+		</fileSet> 
+
+		<!-- PPROD -->
+		<fileSet>
+			<directory>myproject-env/pprod</directory>
+			<outputDirectory>/app/jnd/cells/Cell_RLE-Integration_std/projets/myproject/conf/env</outputDirectory>
+			<includes>
+				<include>RLE-Pre-production-parameters.properties</include>
+			</includes>
+		</fileSet>
+
+		<!-- PROD -->
+		<fileSet>
+			<directory>myproject-env/prod</directory>
+			<outputDirectory>/app/jnd/cells/Cell_RLE-Integration_std/projets/myproject/conf/env</outputDirectory>
+			<includes>
+				<include>RLE-Production-parameters.properties</include>
+			</includes>
+		</fileSet> 
+
+		<!-- Templates -->
+		<fileSet>
+			<directory>target/generated-resources/conf/templates</directory>
+			<outputDirectory>/app/jnd/cells/Cell_RLE-Integration_std/projets/myproject/conf/templates</outputDirectory>
+			<includes>
+				<include>**/*</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+</assembly>
